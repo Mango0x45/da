@@ -11,3 +11,7 @@ and include it in your project with the following command:
 ```sh
 wget 'https://git.sr.ht/~mango/da/blob/master/da.h'
 ```
+
+Do note that the `da_foreach()` macro requires the `auto` keyword from C23.  If
+you wan’t to use an older standard of C, you can write the macro yourself to
+take a type argument.

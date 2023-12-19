@@ -29,8 +29,8 @@
  * da_append(a, x)           Append the item ‘x’ to the array
  * da_remove(a, x)           Remove the item ‘x’ from the array
  * da_remove_range(a, x, y)  Remove the items between the range [x, y)
- * da_foreach(a, t, i)       Iterate the pointer ‘i’ of type ‘t’ over each
- *                           element of the array.
+ * da_foreach(a, p)          Iterate the pointer ‘p’ over each element of the
+ *                           array.  The type of ‘p’ is inferred.
  *
  * The ‘da_append()’ macro will by default double the arrays capacity when it
  * gets full.  If you would like to use a different growth factor instead of 2,
@@ -54,7 +54,7 @@
  * da_append(&nums, 1337);
  * da_append(&nums, 420);
  *
- * da_foreach (&nums, int *, n) {
+ * da_foreach (&nums, n) {
  *     int x = *n << 1;
  *     printf("n = %d; n² = %d\n", *n, x);
  * }
@@ -103,7 +103,7 @@
 		(a)->len -= j - i; \
 	} while (0)
 
-#define da_foreach(a, t, i) \
-	for (t i = (a)->buf; i - (a)->buf < (ptrdiff_t)(a)->len; i++)
+#define da_foreach(a, p) \
+	for (auto p = (a)->buf; p - (a)->buf < (ptrdiff_t)(a)->len; p++)
 
 #endif /* !MANGO_DA_H */
