@@ -25,17 +25,17 @@
  * The argument ‘a’ to all of the below macros is a pointer to the dynamic array
  * structure.
  *
- * da_init(a, n)             Initialize the array with a capacity of ‘n’ items.
- * da_append(a, x)           Append the item ‘x’ to the array
- * da_remove(a, x)           Remove the item ‘x’ from the array
+ * dainit(a, n)              Initialize the array with a capacity of ‘n’ items.
+ * dapush(a, x)              Append the item ‘x’ to the array
+ * daremove(a, x)            Remove the item ‘x’ from the array
  * da_remove_range(a, x, y)  Remove the items between the range [x, y)
  * da_foreach(a, p)          Iterate the pointer ‘p’ over each element of the
  *                           array.  The type of ‘p’ is inferred.
  *
- * The ‘da_append()’ macro will by default double the arrays capacity when it
- * gets full.  If you would like to use a different growth factor instead of 2,
- * you can define the DA_FACTOR macro to your desired growth factor before
- * including this file.
+ * The ‘dapush()’ macro will by default double the arrays capacity when it gets
+ * full.  If you would like to use a different growth factor instead of 2, you
+ * can define the DA_FACTOR macro to your desired growth factor before including
+ * this file.
  *
  *
  * Example
@@ -47,12 +47,12 @@
  * } nums;
  *
  * // Initialize nums with capacity == 4
- * da_init(&nums, 4);
+ * dainit(&nums, 4);
  *
  * // Append 69, 1337, and 420 to nums
- * da_append(&nums, 69);
- * da_append(&nums, 1337);
- * da_append(&nums, 420);
+ * dapush(&nums, 69);
+ * dapush(&nums, 1337);
+ * dapush(&nums, 420);
  *
  * da_foreach (&nums, n) {
  *     int x = *n << 1;
@@ -63,7 +63,7 @@
  * da_remove_range(&nums, 1, 3);
  *
  * // Remove 69 from nums
- * da_remove(&nums, 0);
+ * daremove(&nums, 0);
  */
 
 #ifndef MANGO_DA_H
@@ -75,27 +75,25 @@
 
 #define __da_s(a) (sizeof(*(a)->buf))
 
-#define da_init(a, n) \
+#define dainit(a, n) \
 	do { \
 		(a)->cap = n; \
 		(a)->len = 0; \
-		(a)->buf = malloc((a)->cap * __da_s(a)); \
-		if ((a)->buf == NULL) \
+		if (!((a)->buf = malloc((a)->cap * __da_s(a)))) \
 			err(EXIT_FAILURE, "malloc"); \
 	} while (0)
 
-#define da_append(a, x) \
+#define dapush(a, x) \
 	do { \
 		if ((a)->len >= (a)->cap) { \
 			(a)->cap = (a)->cap * DA_FACTOR + 1; \
-			(a)->buf = realloc((a)->buf, (a)->cap * __da_s(a)); \
-			if ((a)->buf == NULL) \
+			if (!((a)->buf = realloc((a)->buf, (a)->cap * __da_s(a)))) \
 				err(EXIT_FAILURE, "realloc"); \
 		} \
 		(a)->buf[(a)->len++] = (x); \
 	} while (0)
 
-#define da_remove(a, i) da_remove_range((a), (i), (i) + 1)
+#define daremove(a, i) da_remove_range((a), (i), (i) + 1)
 
 #define da_remove_range(a, i, j) \
 	do { \
