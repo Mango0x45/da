@@ -67,6 +67,13 @@
 #ifndef MANGO_DA_H
 #define MANGO_DA_H
 
+#include <err.h>
+#include <errno.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 #define DA_ALLOC(p, n) \
 	do { \
 		if ((n) && SIZE_MAX / (n) < sizeof(*(p))) { \
