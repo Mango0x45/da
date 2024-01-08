@@ -67,22 +67,29 @@
 #ifndef MANGO_DA_H
 #define MANGO_DA_H
 
-#define __da_s(a) (sizeof(*(a)->buf))
+#define DA_ALLOC(p, n) \
+	do { \
+		if ((n) && SIZE_MAX / (n) < sizeof(*(p))) { \
+			errno = EOVERFLOW; \
+			err(EXIT_FAILURE, "realloc"); \
+		} \
+		if (!((p) = realloc((p), (n) * sizeof(*(p))))) \
+			err(EXIT_FAILURE, "realloc"); \
+	} while (0)
 
 #define dainit(a, n) \
 	do { \
+		(a)->buf = NULL; \
 		(a)->cap = n; \
 		(a)->len = 0; \
-		if (!((a)->buf = malloc((a)->cap * __da_s(a)))) \
-			err(EXIT_FAILURE, "malloc"); \
+		DA_ALLOC((a)->buf, (a)->cap); \
 	} while (0)
 
 #define dapush(a, x) \
 	do { \
 		if ((a)->len >= (a)->cap) { \
 			(a)->cap = (a)->cap ? (a)->cap * 2 : 1; \
-			if (!((a)->buf = realloc((a)->buf, (a)->cap * __da_s(a)))) \
-				err(EXIT_FAILURE, "realloc"); \
+			DA_ALLOC((a)->buf, (a)->cap); \
 		} \
 		(a)->buf[(a)->len++] = (x); \
 	} while (0)
@@ -91,7 +98,8 @@
 
 #define da_remove_range(a, i, j) \
 	do { \
-		memmove((a)->buf + (i), (a)->buf + (j), ((a)->len - (j)) * __da_s(a)); \
+		memmove((a)->buf + (i), (a)->buf + (j), \
+		        ((a)->len - (j)) * sizeof(*(a)->buf)); \
 		(a)->len -= j - i; \
 	} while (0)
 
