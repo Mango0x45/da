@@ -20,6 +20,7 @@
  *
  * Remember to call free() on your dynamic arrays ‘buf’ field after use.
  *
+ *
  * Macro Overview
  * ――――――――――――――
  * The argument ‘a’ to all of the below macros is a pointer to the dynamic array
