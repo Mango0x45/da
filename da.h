@@ -32,10 +32,8 @@
  * da_foreach(a, p)          Iterate the pointer ‘p’ over each element of the
  *                           array.  The type of ‘p’ is inferred.
  *
- * The ‘dapush()’ macro will by default double the arrays capacity when it gets
- * full.  If you would like to use a different growth factor instead of 2, you
- * can define the DA_FACTOR macro to your desired growth factor before including
- * this file.
+ * The ‘dapush()’ macro will by double the arrays capacity when it gets full.
+ * If you would like your arrays to grow with a different scale, edit this file.
  *
  *
  * Example
@@ -69,10 +67,6 @@
 #ifndef MANGO_DA_H
 #define MANGO_DA_H
 
-#ifndef DA_FACTOR
-#	define DA_FACTOR 2
-#endif
-
 #define __da_s(a) (sizeof(*(a)->buf))
 
 #define dainit(a, n) \
@@ -86,7 +80,7 @@
 #define dapush(a, x) \
 	do { \
 		if ((a)->len >= (a)->cap) { \
-			(a)->cap = (a)->cap * DA_FACTOR + 1; \
+			(a)->cap = (a)->cap ? (a)->cap * 2 : 1; \
 			if (!((a)->buf = realloc((a)->buf, (a)->cap * __da_s(a)))) \
 				err(EXIT_FAILURE, "realloc"); \
 		} \
