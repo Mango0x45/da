@@ -87,9 +87,10 @@
 #define dainit(a, n) \
 	do { \
 		(a)->buf = NULL; \
-		(a)->cap = n; \
+		(a)->cap = (n); \
 		(a)->len = 0; \
-		DA_ALLOC((a)->buf, (a)->cap); \
+		if (n) \
+			DA_ALLOC((a)->buf, (a)->cap); \
 	} while (0)
 
 #define dapush(a, x) \
