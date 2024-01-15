@@ -72,6 +72,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if __STDC_VERSION__ >= 202311L
+#	define DA_NULL nullptr
+#else
+#	define DA_NULL NULL
+#endif
+
 #define DA_ALLOC(p, n) \
 	do { \
 		if ((n) && SIZE_MAX / (n) < sizeof(*(p))) { \
@@ -84,7 +90,7 @@
 
 #define dainit(a, n) \
 	do { \
-		(a)->buf = NULL; \
+		(a)->buf = DA_NULL; \
 		(a)->cap = (n); \
 		(a)->len = 0; \
 		if (n) \
