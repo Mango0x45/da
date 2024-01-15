@@ -11,12 +11,9 @@
  * The type ‘T’ is whatever type you want to store.  The type ‘N’ is any numeric
  * type — most likely ‘size_t’ — but it could be sized as well.
  *
- * You should include ‘err.h’ and ‘stdlib.h’ along with this file.  If you want
- * to use da_remove(), include ‘string.h’.  The da_remove() macro also doesn’t
- * bother with shrinking your array when the length is far lower than the
- * capacity.  If you care about that, do it yourself.  To use the da_foreach()
- * macro, you need to have ptrdiff_t defined; to be absolutely sure you can
- * include ‘stddef.h’.
+ * The daremove() macro also doesn’t bother with shrinking your array when the
+ * length is far lower than the capacity.  If you care about that, do it
+ * yourself.
  *
  * Remember to call free() on your dynamic arrays ‘buf’ field after use.
  *
@@ -28,13 +25,13 @@
  *
  * dainit(a, n)              Initialize the array with a capacity of ‘n’ items.
  * dapush(a, x)              Append the item ‘x’ to the array
- * daremove(a, x)            Remove the item ‘x’ from the array
+ * daremove(a, x)            Remove the item at index ‘x’ from the array
  * da_remove_range(a, x, y)  Remove the items between the range [x, y)
  * da_foreach(a, p)          Iterate the pointer ‘p’ over each element of the
  *                           array.  The type of ‘p’ is inferred.
  *
- * The ‘dapush()’ macro will by double the arrays capacity when it gets full.
- * If you would like your arrays to grow with a different scale, edit this file.
+ * The ‘dapush()’ macro will double the arrays capacity when it gets full.  If
+ * you would like your arrays to grow with a different scale, edit this file.
  *
  *
  * Example
