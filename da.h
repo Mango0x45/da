@@ -23,15 +23,17 @@
  * The argument ‘a’ to all of the below macros is a pointer to the dynamic array
  * structure.
  *
- * dainit(a, n)              Initialize the array with a capacity of ‘n’ items.
- * dapush(a, x)              Append the item ‘x’ to the array
- * daremove(a, x)            Remove the item at index ‘x’ from the array
- * da_remove_range(a, x, y)  Remove the items between the range [x, y)
- * da_foreach(a, p)          Iterate the pointer ‘p’ over each element of the
- *                           array.  The type of ‘p’ is inferred.
+ * dainit(a, n)             Initialize the array with a capacity of ‘n’ items
+ * dapush(a, x)             Append the item ‘x’ to the array
+ * daextend(a, xs, n)       Append the ‘n’ items pointed to by ‘xs’ to the array
+ * daremove(a, x)           Remove the item at index ‘x’ from the array
+ * da_remove_range(a, x, y) Remove the items between the range [x, y)
+ * da_foreach(a, p)         Iterate the pointer ‘p’ over each element of the
+ *                          array.  The type of ‘p’ is inferred.
  *
- * The ‘dapush()’ macro will double the arrays capacity when it gets full.  If
- * you would like your arrays to grow with a different scale, edit this file.
+ * The ‘dapush()’ and ‘daextend()’ macros will double the arrays capacity when
+ * it gets full.  If you would like your arrays to grow with a different scale,
+ * edit this file.
  *
  *
  * Example
@@ -104,6 +106,18 @@
 			DA_ALLOC((a)->buf, (a)->cap); \
 		} \
 		(a)->buf[(a)->len++] = (x); \
+	} while (0)
+
+#define daextend(a, xs, n) \
+	do { \
+		if ((a)->len + (n) >= (a)->cap) { \
+			do \
+				(a)->cap = (a)->cap ? (a)->cap * 2 : 1; \
+			while ((a)->len + (n) >= (a)->cap); \
+			DA_ALLOC((a)->buf, (a)->cap); \
+		} \
+		memcpy((a)->buf + (a)->len, (xs), (n)); \
+		(a)->len += (n); \
 	} while (0)
 
 #define daremove(a, i) da_remove_range((a), (i), (i) + 1)
